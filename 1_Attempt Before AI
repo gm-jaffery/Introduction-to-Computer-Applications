@@ -1,0 +1,17 @@
+1 — Attempt Before AI (Diagnosis, Planned Decisions, Hash)
+
+File snapshot
+- SHA-256 of original: `[PASTE OUTPUT OF: sha256sum teaching_prices_messy.csv]`
+- Working copy: `teaching_prices_copy.csv`
+
+## Diagnosis & Planned Decisions
+
+| Issue | Code that revealed it | Planned decision | Reason |
+|---|---|---|---|
+| **1. Missing Price** (Row 6, Pulse C) | `df['price'].isna().sum()` | **Flag, retain.** | Never fabricate price data. Add a `flag_price_missing` column. |
+| **2. Text-formatted Price** (`"1,250"` in row 19) | `df['price'].unique()` | **Correct.** Strip commas and cast to float. | The number is valid, just formatted as a string. |
+| **3. Extreme Outlier** (`9999` in row 31) | `df['price'].describe()` (max is 9999 vs median ~165) | **Flag, retain.** | Do not delete valid rows; it may be a typo, but we cannot be sure. Flag it for the analyst. |
+| **4. Near-Duplicate Label** (`"oil b"` in row 41) | `df['item'].unique()` | **Correct casing.** | Standardise to "Oil B" to prevent splitting the group during analysis. |
+| **5. Exact Duplicate Row** (Row 97 duplicates Row 9) | `df.duplicated().sum()` | **Exclude.** | It is an exact copy of a previous entry, not a new observation. |
+
+Commit note:This file was committed as `attempt-before-AI` prior to running any AI code.
